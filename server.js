@@ -52,17 +52,22 @@ app.get('/api/jobs', async (req, res) => {
   }
 });
 
-app.post('/api/register', async(req, res)=>{
-    const {email, password} = req.body;
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await userCollection.insertOne({email, password:hashedPassword});
-        res.status(201).json({message: "User registered successfully"});
-        
-    } catch (error) {
-        res.status(500).json({message: error.message})
-    }
-})
+app.get('/api/cryptocurrency', async (req, res) => {
+  try {
+    const response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=BTC,ETH,XRP,USDT,SOL&convert=USD', {
+      headers: {
+        'X-CMC_PRO_API_KEY': coinMarketCapApiKey
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching cryptocurrency data:", error);
+    res.status(500).json({ message: 'Error fetching cryptocurrency data' });
+  }
+});
+
+
 
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
