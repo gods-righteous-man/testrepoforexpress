@@ -54,7 +54,7 @@ app.get('/api/jobs', async (req, res) => {
 
 app.get('/api/cryptocurrency', async (req, res) => {
   try {
-    const response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?', {
+    const response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest', {
       params: {
         symbol: 'BTC,ETH,XRP,SOL,USDT',
         convert: 'USD'
