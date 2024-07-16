@@ -54,8 +54,13 @@ app.get('/api/jobs', async (req, res) => {
 
 app.get('/api/cryptocurrency', async (req, res) => {
   try {
-    const response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=BTC,ETH,XRP,USDT,SOL&convert=USD', {
-      headers: {
+    const response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?', {
+      params: {
+        symbol: 'BTC,ETH,XRP,SOL,USDT',
+        convert: 'USD'
+    },
+      
+    headers: {
         'X-CMC_PRO_API_KEY': coinMarketCapApiKey
       }
     });
