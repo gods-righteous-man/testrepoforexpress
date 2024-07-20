@@ -3,9 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const axios = require('axios')
+const https = require('https');
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port =  process.env.PORT || 8080;
+const coinMarketCapApiKey = process.env.coinMarketCapApiKey;
 
 // Enable CORS for all routes
 app.use(cors());
@@ -13,7 +16,7 @@ app.use(express.json());
 
 // MongoDB Atlas connection URI
 const uri = process.env.MONGODB_URI;
-// const uri = "mongodb+srv://<>:<>@cluster0.cepgukq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// const uri = "mongodb+srv://@cluster0.cepgukq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const secret = process.env.JWT_SECRET; 
 // MongoDB client instance
 const client = new MongoClient(uri, {
@@ -62,8 +65,16 @@ app.get('/api/cryptocurrency', async (req, res) => {
       
     headers: {
         'X-CMC_PRO_API_KEY': coinMarketCapApiKey
-      }
+      },
+
+      httpsAgent: new https.Agent({  
+        rejectUnauthorized: false,
+        secureProtocol: 'TLSv1_2_method'
+      })
+
     });
+
+    
 
     res.json(response.data);
   } catch (error) {
@@ -115,6 +126,6 @@ app.post('/api/login', async (req, res) => {
 // Start MongoDB connection and server
 connectToMongoDB().then(() => {
   app.listen(port, () => {
-    console.log("Server running on port ${port}");
+    console.log(`Server running on port ${port}`);
   });
 });
